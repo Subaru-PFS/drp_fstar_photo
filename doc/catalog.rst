@@ -1,4 +1,4 @@
-# The catalog of flux standard stars 
+The catalog of flux standard stars 
 
 
 This catalog is created to ensure the quality of flux calibration in the PFS 2D data reduction pipeline. 
