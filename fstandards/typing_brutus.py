@@ -4,16 +4,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import interpolate
 from scipy.stats import sigmaclip
+from scipy.integrate import quad
 
-import sys, os, time, resource
+import sys, os, glob, time,datetime, resource
 import corner
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 
 import h5py
 	
-from dustmaps.bayestar import BayestarQuery
-from dustmaps.sfd import SFDQuery
 
 from memory_profiler import profile
 
@@ -27,6 +26,8 @@ z_sun = (state["parameters"]["z_sun"]).value
 
 from multiprocessing import Pool, RawArray
 import multiprocessing as mp
+
+
 
 from brutus import filters
 from brutus import seds
@@ -1035,7 +1036,7 @@ def create_sedmodel():
 
 
 
-def run_brutus(outfile, include_plx=True):
+def run_brutus_segue(outfile, include_plx=True):
 
 	from brutus import filters
     #from brutus import seds
@@ -1116,10 +1117,127 @@ def run_brutus(outfile, include_plx=True):
 	parallax=parallax, parallax_err=parallax_err, phot_offsets=off_mist, mag_max=50., merr_max=0.5, \
 	dustfile=dustfile, Ndraws=2500, Nmc_prior=50, logl_dim_prior=True, save_dar_draws=True, running_io=True, verbose=True)
 
+	return
+
+
+def run_brutus(inputcatalog, include_plx=False):
+
+	from brutus import filters
+    #from brutus import seds
+	from brutus import utils as butils
+	from brutus.fitting import BruteForce
+	import brutus
+	
+
+	outfile = "../outputs/PS1_Gaia_mist_woplx" + ((inputcatalog.split("GaiaEDR3"))[-1]).replace(".csv", "")
+
+	filt = filters.ps[:-2]
+
+	gridfile = "../../brutus/data/DATAFILES/grid_mist_v9.h5"
+	(models_mist, labels_mist, lmask_mist) = butils.load_models(gridfile, filters=filt)
+
+	# Initialize BruteForce class
+	BF_mist = BruteForce(models_mist, labels_mist, lmask_mist)
+	
+	# Load data
+
+
+	cols = ['objID', 'source_id','gmag', 'e_gmag', 'rmag', 'e_rmag', 'imag', 'e_imag', 'zmag', 'e_zmag', 'ymag', 'e_ymag', 'parallax', 'parallax_error', 'l', 'b' ]
+	df0 = pd.read_csv(inputcatalog, usecols = cols)   # add nrows=X to limit the number of entries.
+	
+	# Remove entries with NaN
+	#filt = (df0.isnull().any(axis=1)==False) & (df0['e_gmag']>0.)  & (df0['e_rmag']>0.)  & (df0['e_imag']>0.)  & (df0['e_zmag']>0.)  & (df0['e_ymag']>0.)
+	df = df0[df0.isnull().any(axis=1)==False]
+	#filt = (df1['e_gmag']>0.)  & (df1['e_rmag']>0.)  & (df1['e_imag']>0.)  & (df1['e_zmag']>0.)  & (df1['e_ymag']>0.)
+	#df = df1[filt]
+	#df = df1
+	print("Analyzing %i/%i stars"%(len(df), len(df0)))
+
+
+	objid = df['source_id']
+	mag = [ [line[0], line[1], line[2], line[3], line[4]] for line in zip(df["gmag"], df["rmag"], df["imag"], df["zmag"], df["ymag"])]
+	magerr = [ [line[0], line[1], line[2], line[3], line[4]] for line in zip(df["e_gmag"], df["e_rmag"], df["e_imag"], df["e_zmag"], df["e_ymag"]) ]
+	mask = np.isfinite(magerr)
+	phot, err = butils.inv_magnitude(np.array(mag), np.array(magerr))
+      
+
+	
+	plx = df["parallax"].values
+	plxerr =df["parallax_error"].values
+
+
+	l = df["l"].values
+	b = df["b"].values
+	coords = np.c_[l, b]
+
+
+	# Photometric offset 
+	off_file_mist = "../../brutus/data/DATAFILES/offsets_mist_v8.txt"
+	off_mist = butils.load_offsets(off_file_mist, filters=filt)
+
+	# Fitting the data
+	np.random.seed(862)
+
+	dustfile = "../../brutus/data/DATAFILES/bayestar2019_v1.h5"
+
+	
+	if os.path.isfile(outfile + ".h5"):
+		os.remove(outfile + ".h5")
+
+
+	if include_plx==True:
+		
+		parallax = plx
+		parallax_err = plxerr
+
+	else:
+		parallax = np.zeros_like(plx)
+		parallax[:]=np.nan
+		parallax_err = np.zeros_like(plxerr)
+		parallax_err[:] = np.nan
+	
+	BF_mist.fit(phot, err, mask, objid, outfile, data_coords=coords, \
+	parallax=parallax, parallax_err=parallax_err, phot_offsets=off_mist, mag_max=50., merr_max=0.5, \
+	dustfile=dustfile, Ndraws=2000, Nmc_prior=50, logl_dim_prior=True, save_dar_draws=True, running_io=True, verbose=True)
 
 	return
 
-def read_brutus_results(filename, paramfile, plot=False):
+
+
+def run_brutus_multiprocess():
+
+	#start_time = time.process_time()
+
+	start_time = time.perf_counter()
+
+	catalogs = glob.glob("../comissioning/Nov2022/PS1DR2_GaiaEDR3_ra?.*csv")
+
+	#catalogs = ["../comissioning/Nov2022/PS1DR2_GaiaEDR3_ra0.0_1.0_dec-40.0_90.0.csv", "../comissioning/Nov2022/PS1DR2_GaiaEDR3_ra1.0_2.0_dec-40.0_90.0.csv"]
+
+
+	
+
+	ncpus = mp.cpu_count()
+	print("Number of CPUs used: ", ncpus)
+	pool = mp.Pool(ncpus)
+
+	results = pool.map(run_brutus, [catalog for catalog in catalogs])
+
+	pool.close()
+
+	#end_time = time.process_time()
+	end_time = time.perf_counter()
+
+	elapse_time = end_time - start_time
+	print("CPU time = " ,elapse_time)
+
+	return()
+
+
+
+
+
+def read_brutus_results_segue(filename, paramfile, plot=False):
 	
 	from brutus import utils as butils
 	from brutus import filters
@@ -1132,7 +1250,6 @@ def read_brutus_results(filename, paramfile, plot=False):
 	gridfile = '../../brutus/data/DATAFILES/grid_mist_v9.h5'
 	(models_mist, labels_mist, lmask_mist) = butils.load_models(gridfile, filters=filt)
 
-	print(labels_mist)
 
 	# Photometric offset 
 	off_file_mist = "../../brutus/data/DATAFILES/offsets_mist_v8.txt"
@@ -1260,6 +1377,228 @@ def read_brutus_results(filename, paramfile, plot=False):
 	return
 
 
+def asymmetric_gaussian(x, mu, sd_low, sd_high):
+	
+	if x <= mu:
+		sd = sd_low
+	else:
+		sd = sd_high
+	return 1 / (sd*(2.*np.pi)**0.5) * np.exp((x-mu)**2/(-2.*sd**2))
+
+def fstar_prob(teff, teff_low, teff_high):
+
+	# Fstar range
+	tmin = 6000.
+	tmax = 7500.
+
+	mu = teff
+	sd_low = teff-teff_low
+	sd_high = teff_high-teff
+
+	fstar_prob = quad(asymmetric_gaussian, tmin, tmax, args=(mu, sd_low, sd_high))
+	#fstar_prob = quad(lambda x: 1 / (sd*(2.*np.pi)**0.5) * np.exp((x-mu)**2/(-2.*sd**2)), tmin, tmax)
+	#print(quad(lambda x: 1 / (sd*(2.*np.pi)**0.5) * np.exp((x-mu)**2/(-2.*sd**2)), -np.inf, np.inf), "  should be 1.")
+
+
+	return fstar_prob
+
+def read_brutus_results(filename, catalog, paramfile, plot=False):
+	
+	from brutus import utils as butils
+	from brutus import filters
+
+	from brutus import plotting as bplot
+	
+	filt = filters.ps[:-2]
+
+	# import MIST model grid
+	gridfile = '../../brutus/data/DATAFILES/grid_mist_v9.h5'
+	(models_mist, labels_mist, lmask_mist) = butils.load_models(gridfile, filters=filt)
+
+
+	# Photometric offset 
+	off_file_mist = "../../brutus/data/DATAFILES/offsets_mist_v8.txt"
+	off_mist = butils.load_offsets(off_file_mist, filters=filt)
+
+	f = h5py.File(filename, 'r')
+
+
+
+	
+	idxs_mist = f['model_idx'][:]  # model indices
+	chi2_mist = f['obj_chi2min'][:]  # best-fit chi2
+	nbands_mist = f['obj_Nbands'][:]  # number of bands in fit
+	dists_mist = f['samps_dist'][:]  # distance samples
+	reds_mist = f['samps_red'][:]  # A(V) samples
+	dreds_mist = f['samps_dred'][:]  # R(V) samples
+	lnps_mist = f['samps_logp'][:]  # log-posterior of samples
+
+
+
+	# Load SEGUE catalog data 
+	df0 = pd.read_csv(catalog)
+
+
+	# Information from the catalog
+
+	obj_ids = np.array((),dtype=int)
+	catalogs = ()
+	ras = ()
+	decs = ()
+	epochs = ()
+	plxs =()
+	plx_errs = ()
+	pmras = ()
+	pmra_errs = ()
+	pmdecs = ()
+	pmdec_errs = ()
+
+
+
+
+	teff = () 
+	teff_low = ()
+	teff_high = ()
+
+	logg = ()
+	logg_low = ()
+	logg_high = ()
+
+	
+	fstar_probs = ()
+
+
+
+
+	photos = None 
+
+	for i, lab in enumerate(f['labels'][:]):
+
+		
+
+		df = df0[df0['source_id']==lab]	
+		
+
+
+		mag = [ [line[0], line[1], line[2], line[3], line[4]] for line in zip(df["gmag"], df["rmag"], df["imag"], df["zmag"], df["ymag"])]
+		magerr = [ [line[0], line[1], line[2], line[3], line[4]] for line in zip(df["e_gmag"], df["e_rmag"], df["e_imag"], df["e_zmag"], df["e_ymag"]) ]
+		mask = np.isfinite(magerr)
+		phot, err = butils.inv_magnitude(np.array(mag), np.array(magerr), zeropoints = 3631.*1.e+9)
+
+		if photos is None:
+			photos = np.round(phot, decimals = 2)
+			photo_errs = np.round(err, decimals = 2)
+
+		else:
+			photos = np.vstack((photos, np.round(phot[0,:], decimals = 2)))
+			photo_errs = np.vstack((photo_errs, np.round(err[0,:], decimals = 2)))
+
+
+		obj_ids = np.hstack((obj_ids, lab))
+		catalogs = np.hstack((catalogs, "GaiaDR3"))
+		plxs = np.hstack((plxs, df["parallax"].values))
+		plx_errs = np.hstack((plx_errs, df["parallax_error"].values))
+		ras = np.hstack((ras, df["ra"].values))
+		decs = np.hstack((decs, df["dec"].values))
+		epochs = np.hstack((epochs, df["ref_epoch"].values))
+		pmras = np.hstack((pmras, df["pmra"].values))
+		pmra_errs = np.hstack((pmra_errs, df["pmra_error"].values))
+		pmdecs = np.hstack((pmdecs, df["pmdec"].values))
+		pmdec_errs = np.hstack((pmdec_errs, df["pmdec_error"].values))
+
+
+
+
+		if plot==True:
+			fig, ax, parts = bplot.posterior_predictive(models_mist,  # stellar model grid
+                                            idxs_mist[i],  # model indices
+                                            reds_mist[i],  # A(V) draws
+                                            dreds_mist[i],  # R(V) draws
+                                            dists_mist[i],  # distance draws
+                                            data=phot[0], data_err=err[0],  # data
+                                            data_mask=mask[0],  # band mask
+                                            offset=off_mist,  # photometric offsets
+                                            psig=2.,  # plot 2-sigma errors
+                                            labels=filt,  # filters 
+                                            vcolor='blue',  # "violin plot" colors for the posteriors
+                                            pcolor='black')  # photometry colors for the data
+			figname = "../figs/sed_" + str(lab) + ".png"
+
+			fig.savefig(figname)
+
+		print('Best-fit chi2 (MIST):', chi2_mist[i])
+
+
+		# Get Teff
+		#print(labels_mist.dtype.names)
+		params = labels_mist[idxs_mist[i]]
+		lteff = [ line[5] for line in params ]
+		q1, q2, q3 = butils.quantile(lteff, [0.159, 0.5, 0.841])  # 1sigma quantiles
+		teff = np.hstack((teff,np.round(10**q2, decimals = 1)))
+		teff_low = np.hstack((teff_low, np.round(10**q1, decimals = 1)))
+		teff_high = np.hstack((teff_high, np.round(10**q3, decimals = 1)))
+			
+
+		# Probability of being F-star
+		P_fstar, P_fstar_err = fstar_prob(10**q2, 10**q1, 10**q3)
+
+		fstar_probs = np.hstack((fstar_probs, P_fstar))
+
+		if P_fstar<0 or P_fstar>1.:
+			print("Probability of Fstar for %i is out of range:  %f"%(lab, P_fstar))
+
+		if P_fstar>0.5:
+			print("Fstar!")
+		
+
+		loggs = [ line[6] for line in params ]
+		q1, q2, q3 = butils.quantile(loggs, [0.159, 0.5, 0.841])
+		logg = np.hstack((logg, np.round(q2, decimals = 2)))
+		logg_low = np.hstack((logg_low, np.round(q1, decimals = 2)))
+		logg_high = np.hstack((logg_high, np.round(q3, decimals = 2)))
+
+		if plot==True:
+			fig2, axes = bplot.cornerplot(idxs_mist[i], 
+                             (dists_mist[i], reds_mist[i], dreds_mist[i]),
+                             labels_mist,  # model labels
+                             parallax=plx[0], parallax_err=plxerr[0],  # overplot if included
+                             show_titles=True, color='blue', pcolor='orange',
+                             fig=plt.subplots(11, 11, figsize=(55, 55)))  #  custom figure
+			plt.xticks(fontsize=12)
+			figname = "../figs/corner_" + str(lab) + ".png"
+			fig2.savefig(figname)
+
+		if i==300:
+			break
+	
+	#print(photos)
+	#print(np.shape(photos[:,0]))	
+	outdata = { "obj_id": obj_ids,  "catalog": catalogs, "ra": ras, "dec": decs, \
+	"epoch": epochs, "parallax":plxs, "parallax_error":plx_errs, "pmra":pmras, \
+	"pmra_error":pmra_errs, "pmdec":pmdecs, "pmdec_error":pmdec_errs, "gFluxJy":photos[:, 0], \
+	"rFluxJy":photos[:, 1], "iFluxJy":photos[:, 2], "zFluxJy":photos[:, 3], \
+	"yFluxJy":photos[:, 4], "gFluxJy_err":photo_errs[:, 0], "rFluxJy_err":photo_errs[:, 1], \
+	"iFluxJy_err":photo_errs[:, 2], "zFluxJy_err":photo_errs[:, 3], \
+	"yFluxJy_err":photo_errs[:, 4], "probfstar": fstar_probs, \
+	"teff":teff, "teff_low":teff_low, "teff_high":teff_high, "logg":logg, "logg_low":logg_low, "logg_high":logg_high}
+
+	dfout = pd.DataFrame(outdata)
+	dfout.to_csv(paramfile, index = False)
+
+	return
+
+
+
+	
+
+
+
+
+
+
+
+
+
 def plot_param(paramfiles):
 
 	cmap = plt.get_cmap("Oranges")
@@ -1366,6 +1705,160 @@ def plot_param(paramfiles):
 
 
 
+def produce_readme_brutus():
+
+	samplefile = "../outputs/params/PS1_Gaia_mist_woplx_ra0.0_1.0_dec-40.0_90.0_params.csv"
+	df = pd.read_csv(samplefile)
+	colnames = df.columns
+	
+	line = "="*100
+	empty = " "*100 
+	empty5 = "\n"*5
+	empty10 = "\n"*10
+	empty3 = "\n"*3
+
+	line2 = " --------------------------------------"
+	title = "        Candidate F-type stars"
+	virsion = "            Virsion: 2.0"
+	dt_now = datetime.datetime.now()
+	datestring = "     Table created on %i/%i/%i"%(dt_now.day, dt_now.month, dt_now.year)	
+	author = "      Authors: PFS obsproc team"
+	section = " File description"
+
+
+	f=open("../outputs/params/Readme", "w")
+	for string in empty, line2, empty, title, empty, virsion, empty, datestring, empty, author, empty, line2, empty3, section, empty:
+		f.write(string + "\n")
+
+	for i, column in enumerate(colnames):
+		if column == "obj_id":
+			unit = " - "
+			description = "Gaia source ID"
+		elif column == "catalog":
+			unit = " - "
+			description = "Catalog name"
+		elif column == "ra":
+			unit = "deg" 
+			description = "Right ascension " 
+		elif column == "dec":
+			unit = "deg" 
+			description = "Declination"
+		elif column == "epoch":
+			unit = "year"
+			description = "The reference epoch for ra, dec, parallax, pmra, and pmdec"
+		elif column == "parallax":
+			unit = "mas"
+			description = "Parallax"
+		elif column == "parallax_error": 
+			unit = "mas"
+			description = "Standard error of parallax"
+		elif column == "pmra":
+			unit = "mas/yr"
+			description = "Proper motion in right ascension direction"
+		elif column == "pmra_error":
+			unit = "mas/yr"
+			description = "Standard error of pmra"
+		elif column == "pmdec":
+			unit = "mas/yr"
+			description = "Proper motion in declination direction"
+		elif column == "pmdec_error":
+			unit = "mas/yr"
+			description = "Standard error of pmdec"
+		elif column == "gFluxJy":
+			unit = "nJy"
+			description = "g-band flux (PS1DR2)"
+		elif column == "rFluxJy":
+			unit = "nJy"
+			description = "r-band flux (PS1DR2)"
+		elif column == "iFluxJy":
+			unit = "nJy"
+			description = "i-band flux (PS1DR2)"
+		elif column == "zFluxJy":
+			unit = "nJy"
+			description = "z-band flux (PS1DR2)"
+		elif column == "yFluxJy":
+			unit = "nJy"
+			description = "y-band flux (PS1DR2)"
+		elif column == "gFluxJy_err":
+			unit = "nJy"
+			description = "g-band flux error (PS1DR2)"
+		elif column == "rFluxJy_err":
+			unit = "nJy"
+			description = "r-band flux error (PS1DR2)"
+		elif column == "iFluxJy_err":
+			unit = "nJy"
+			description = "i-band flux error (PS1DR2)"
+		elif column == "zFluxJy_err":
+			unit = "nJy"
+			description = "z-band flux error (PS1DR2)"
+		elif column == "yFluxJy_err":
+			unit = "nJy"
+			description = "y-band flux error (PS1DR2)"
+		elif column == "probfstar":
+			unit = " - "
+			description = "Probability of being an F-type star"
+		elif column == "teff":
+			unit = "K"
+			description = "Effective temperature"
+		elif column == "teff_low":
+			unit = "K"
+			description = "16% quantile of the teff posterior distribution"
+		elif column == "teff_high":
+			unit = "K"
+			description = "84% quantile of the teff posterior distribution"
+		elif column == "logg":
+			unit = "dex"
+			description = "Surface gravity"
+		elif column == "logg_low":
+			unit = "dex"
+			description = "16% quantile of the logg posterior distribution"
+		elif column == "logg_high":
+			unit = "dex"
+			description = "84% quantile of the logg posterior distribution"
+		elif column == "probfstar":
+			unit = " - "
+			description = "Probability of being an F-type star"
+		else:
+			continue
+
+		if i+1 < 10:
+			margin1 = " "*(19-len(column))
+			margin2 = " "*(10-len(unit))
+		else:
+			margin1 = " "*(18-len(column))
+			margin2 = " "*(10-len(unit))
+
+		f.write(" %i "%(i+1) + column + margin1 + unit + margin2 + description + "\n")
+
+
+	section = " Notes"
+	note1 = "  - For ra, dec, epoch, parallax, pmra, pmdec and their associated uncertainties."
+	note2 = "    see the Gaia archive website and the documentation."
+
+	for string in empty3, section, empty, note1, note2, empty3:
+
+		f.write(string + "\n")
+
+	f.close()
+
+
+def read_brutus_results_all(filelist):
+
+	for filename in filelist:
+		
+		coord_range = ((((filename.split("/"))[-1]).split("woplx_"))[-1]).replace(".h5", "")
+		catalog = "../comissioning/Nov2022/PS1DR2_GaiaEDR3_" + coord_range + ".csv"
+		paramfile = filename.replace(".h5", ".csv")
+		
+		read_brutus_results(filename, catalog, paramfile)
+
+
+		print(catalog)
+		sys.exit()
+
+
+		
+
 
 
 
@@ -1388,13 +1881,26 @@ if __name__ == "__main__":
 	#mini, feh, eep = 1.2, -0.7, 450.
 	#av, rv, dist = 0.5, 3.1, 2000.
 	#mag, params, c = sedmaker.get_sed(mini=mini, feh=feh, eep=eep, av=av, rv=rv, dist=dist)
-	#outfile="../outputs/segue_mist_woplx"
-	#run_brutus(outfile, include_plx=False)
+	#inputcatalog = "../comissioning/Nov2022/PS1DR1_GaiaEDR3_ra0.0_1.0_dec-40.0_90.0.csv"
+	#outfile="../outputs/ps1_ra0-1_mist_woplx"
+	#run_brutus(inputcatalog)
+	#run_brutus_multiprocess()
+
 	#filename="../outputs/segue_mist_woplx"
 	#filename="../outputs/segue_mist"
 	#paramfile = "../outputs/param_compare_woplx.csv"
 	#paramfile = "../outputs/param_compare.csv"
-	#read_brutus_results(filename, paramfile)
-	paramfiles = ["../outputs/param_compare.csv", "../outputs/param_compare_woplx.csv"]
-	plot_param(paramfiles)
+	#filename = "../outputs/PS1_Gaia_mist_woplx_ra0.0_1.0_dec-40.0_90.0.h5"
+	filelist = glob.glob("../outputs/PS1_Gaia_mist_woplx_ra?.*.h5")
+	read_brutus_results_all(filelist)	
+
+	#catalog = "../comissioning/Nov2022/PS1DR2_GaiaEDR3_ra0.0_1.0_dec-40.0_90.0.csv"
+	#paramfile = "../outputs/params/PS1_Gaia_mist_woplx_ra0.0_1.0_dec-40.0_90.0_params.csv"
+	#read_brutus_results(filename, catalog, paramfile)
+	
+
+	#produce_readme_brutus()
+
+	#paramfiles = ["../outputs/param_compare.csv", "../outputs/param_compare_woplx.csv"]
+	#plot_param(paramfiles)
 	#view_models()
