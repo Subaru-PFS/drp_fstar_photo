@@ -159,7 +159,7 @@ Stellar parameter estimates based on the brutus code
 ### MIST isochrone model
 
 
-![MIST isochrone model](../images/)
+![MIST isochrone model](../figs_rst/brutus_mist_isochrones.png)
 
 
 
