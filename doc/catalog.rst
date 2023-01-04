@@ -108,7 +108,7 @@ Inorder to ensure the quality of the photometric data, we adopt the following qu
 
 
 
-Selection methods
+Summary of the selection methods
 -------------------------------------
 
 
@@ -133,7 +133,6 @@ Selection methods
       temperature, logg, feh, afe, av, rv
   ** The weights and bias for the interporation are pre-computed. The interporation 
      is therefore very fast 
-  ** 
 
  
 
@@ -146,8 +145,23 @@ Selection methods
 
 
 
-Properties of the selected stars
------------------------------------------
+Stellar parameter estimates based on the brutus code
+--------------------------------------------------
+
+
+### The algorithm
+
+(Check StarHorse algorithm as well: arXiv:2111.01860v2)
+
+
+
+
+### MIST isochrone model
+
+
+![MIST isochrone model](../images/)
+
+
 
 
 
