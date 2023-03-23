@@ -86,7 +86,7 @@ Inorder to ensure the quality of the photometric data, we adopt the following qu
 
 - $g>14$ to avoid saturated objects.
 - Non-negative values of uncertainties in PS1 magnitudes.  
-- ${\rm ps_score} > 0.8$ : To ensure an object is a point source according to the classification scheme of [Tachibana+18](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
+- ${\rm ps\_score} > 0.8$ : To ensure an object is a point source according to the classification scheme of [Tachibana+18](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
  
 
 
@@ -118,19 +118,19 @@ Summary of the selection methods
 
 
 
-1. Logistic regression 
+1. Logistic regression (Version 1.X) 
 
-* Training sample: Stars with spectroscopic $ T_{eff} $ and $\log g$ estimates from SEGUE catalog. 
-  F-type stars are defined as stars that satisfy $ 6000 < T_{eff} < 7800 $ [K] and $3.5<\log g<5.5$. 
-* Input: g, r, i, z, extinction map
+* Training sample: Stars with spectroscopic $T\_{eff}$ and $\log g$ estimates from SEGUE catalog. 
+  F-type stars are defined as stars that satisfy $6000 < T\_{eff} < 7800$ [K] and $3.5<\log g<5.5$. 
+* Input: $g$, $r$, $i$, $z$, extinction map
 * Output: Probability of being an F-type star 
 
 
 
-2. Stellar parameter estimates based on the [brutus](https://github.com/joshspeagle/brutus) code
+2. Stellar parameter estimates based on the [brutus](https://github.com/joshspeagle/brutus) code (Version 2.X)
 
  
-* Input: g, r, i, z, parallax, stellar isochrone models
+* Input: $g$, $r$, $i$, $z$, parallax, stellar isochrone models
 * Output: Posterior probability distribution of Teff and logg 
 
 
@@ -145,7 +145,7 @@ Summary of the selection methods
 
 3. Stellar parameter estimates based on a full MCMC
 
-    Input: g, r, i, z, parallax, extinction map, stellar isochrone models
+    Input: $g$, $r$, $i$, $z$, parallax, extinction map, stellar isochrone models
     Output: Posterior probability distribution of Teff and logg
 
 
@@ -168,7 +168,7 @@ See [brutus Github website](https://github.com/joshspeagle/brutus) for more deta
  * For the models of stellar structure and evolution, we make use of [MIST stellar isochrone models](https://waps.cfa.harvard.edu/MIST/).
       The isochrones are prepared by varying the following parameters:
    * metallicity ([Fe/H])
-   * age (log t_age[yrs])
+   * age (log t\_age[yrs])
    * extinction A(V)[mag]
    * differential extinction (R(V))
    * secondary mass fraction (q)
