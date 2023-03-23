@@ -120,8 +120,8 @@ Summary of the selection methods
 
 1. Logistic regression 
 
-* Training sample: Stars with spectroscopic $T_{\rm eff}$ and $\log g$ estimates from SEGUE catalog. 
-  F-type stars are defined as stars that satisfy $6000<T_{\rm eff}<7800$[K] and $3.5<\log g<5.5$. 
+* Training sample: Stars with spectroscopic $ T_{eff} $ and $\log g$ estimates from SEGUE catalog. 
+  F-type stars are defined as stars that satisfy $ 6000 < T_{eff} < 7800 $ [K] and $3.5<\log g<5.5$. 
 * Input: g, r, i, z, extinction map
 * Output: Probability of being an F-type star 
 
@@ -136,9 +136,9 @@ Summary of the selection methods
 
 * The algorithm in brutus: 
   
-  ** Interporate a grid of bolometric correction for a given set of labels: 
+  * Interporate a grid of bolometric correction for a given set of labels: 
       temperature, logg, feh, afe, av, rv
-  ** The weights and bias for the interporation are pre-computed. The interporation 
+  * The weights and bias for the interporation are pre-computed. The interporation 
      is therefore very fast 
 
  
@@ -165,14 +165,14 @@ See [brutus Github website](https://github.com/joshspeagle/brutus) for more deta
 
 
 
- *    For the models of stellar structure and evolution, we make use of [MIST stellar isochrone models](https://waps.cfa.harvard.edu/MIST/).
+ * For the models of stellar structure and evolution, we make use of [MIST stellar isochrone models](https://waps.cfa.harvard.edu/MIST/).
       The isochrones are prepared by varying the following parameters:
- 	* metallicity ([Fe/H])
-	* age (log t_age[yrs])
-	* extinction A(V)[mag]
-	* differential extinction (R(V))
-	* secondary mass fraction (q)
-	* distance (d [kpc]). 
+   * metallicity ([Fe/H])
+   * age (log t_age[yrs])
+   * extinction A(V)[mag]
+   * differential extinction (R(V))
+   * secondary mass fraction (q)
+   * distance (d [kpc]). 
      
 	In the following we assume observed stars are single and thus q=0.
   
