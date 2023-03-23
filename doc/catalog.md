@@ -29,6 +29,11 @@ taken with the low-resolution mode.
 to evaluate the throughput variation accros the PFS field-of-view. 
 
 
+![Spectral energy distribution of F-type stars](../images/Fstarspec.png)
+
+![Transmission curves for the filters in Gaia and PanStarrs](../images/filters.png)
+
+
 
 Base catalogs
 ---------------
@@ -49,7 +54,7 @@ select m.objID, objName, raMean as RAJ2000, decMean as DEJ2000, l, b, gMeanPSFMa
 
 
 Median 50% completeness of PFS photometry:  g=23.2, r=23.2, i=23.1, z=22.3 and y=21.2 with significant variation accross the sky.
-(https://outerspace.stsci.edu/display/PANSTARRS/PS1+Photometric+Depth) 
+ See [PS1 website](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Photometric+Depth). 
 
 
 
@@ -79,9 +84,9 @@ Quality cuts
 
 Inorder to ensure the quality of the photometric data, we adopt the following quality cuts. 
 
-- g>14 to avoid saturated objects.
+- $g>14$ to avoid saturated objects.
 - Non-negative values of uncertainties in PS1 magnitudes.  
-- ps_score > 0.8 : To ensure an object is a point source according to the classification scheme of Tachibana+18 (https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
+- ${\rm ps_score} > 0.8$ : To ensure an object is a point source according to the classification scheme of [Tachibana+18](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
  
 
 
@@ -115,12 +120,14 @@ Summary of the selection methods
 
 1. Logistic regression 
 
-	Input: g, r, i, z, extinction map
-    Output: Probability of being an F-type star 
+* Training sample: Stars with spectroscopic $T_{\rm eff}$ and $\log g$ estimates from SEGUE catalog. 
+  F-type stars are defined as stars that satisfy $6000<T_{\rm eff}<7800$[K] and $3.5<\log g<5.5$. 
+* Input: g, r, i, z, extinction map
+* Output: Probability of being an F-type star 
 
 
 
-2. Stellar parameter estimates based on the brutus code
+2. Stellar parameter estimates based on the [brutus](https://github.com/joshspeagle/brutus) code
 
  
 * Input: g, r, i, z, parallax, stellar isochrone models
@@ -136,7 +143,7 @@ Summary of the selection methods
 
  
 
-3. Stellar parameter estimates based on MCMC
+3. Stellar parameter estimates based on a full MCMC
 
     Input: g, r, i, z, parallax, extinction map, stellar isochrone models
     Output: Posterior probability distribution of Teff and logg
@@ -151,15 +158,62 @@ Stellar parameter estimates based on the brutus code
 
 ### The algorithm
 
-(Check StarHorse algorithm as well: arXiv:2111.01860v2)
+
+See [brutus Github website](https://github.com/joshspeagle/brutus) for more details.
+
+(See also StarHorse algorithm: arXiv:2111.01860v2)
+
+
+
+ *    For the models of stellar structure and evolution, we make use of [MIST stellar isochrone models](https://waps.cfa.harvard.edu/MIST/).
+      The isochrones are prepared by varying the following parameters:
+ 	* metallicity ([Fe/H])
+	* age (log t_age[yrs])
+	* extinction A(V)[mag]
+	* differential extinction (R(V))
+	* secondary mass fraction (q)
+	* distance (d [kpc]). 
+     
+	In the following we assume observed stars are single and thus q=0.
+  
+ *    In each isochrone, stellar parameters (e.g., Temperature, logg, etc.) are given over a grid of 
+      equivalent evolutionary points (EEPs). 
+
+ *    The spectral energy distribution of a given set of stellar model parameters can be computed thanks to the 
+      neural network model implemented in the code.
+ 
+ * 　 We first prepare tables of the stellar isochrone models and SED models of a desired filter set (PS1 griz).  
+ 
+ *    Given observed fluxs of the filters, posterior probabilities of stellar parameters are computed. 
 
 
 
 
-### MIST isochrone model
+### Isochrone models and predictued spectral energy distribution
 
 
-![MIST isochrone model](../figs_rst/brutus_mist_isochrones.png)
+
+
+
+
+![MIST isochrone model](../images/brutus_mist_isochrones.png)
+
+
+
+The figures below show the predicted SEDs for various evolutionary phases for F-dwarf and M-dwarf.
+
+![SEDs for F-dwarf](../images/SED_SEGUE_Fdwarf.png)
+
+![SEDs for M-dwarf](../images/SED_SEGUE_Mdwarf.png)
+
+
+
+
+### Validation with SEGUE sample
+
+
+
+
 
 
 
@@ -169,7 +223,7 @@ Stellar parameter estimates based on the brutus code
 ### Sky distribution 
 
 
-
+![Sky distribution of classified stars](../images/healpix_brutus_classifier.png)
 
 
 
