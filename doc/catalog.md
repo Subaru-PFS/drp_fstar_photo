@@ -250,10 +250,10 @@ and Galactic stellar distributions as priors, it correctly reproduces the spectr
 
 
 (a) SEGUE: $7137\pm 82$, $4.19\pm 0.12$, PS1 + brutus: $7264^{+366}\_{-244}$, $4.3^{+0.2}\_{-1.4}$
-![F star at high Galactic latitude ($b=62$)](../images/sed_2589622074314090496_t6907_g4.1_feh-0.8.png)
+![F star at high Galactic latitude ($b=62$)](../images/sed_3735840702450475008_t7137_g4.2_feh-1.0.png)
 
 (b) SEGUE: $6907\pm 75$, $4.07\pm 0.20$, PS1 + brutus: $6202^{+418}\_{-343}$, $4.5^{+0.1}\_{-0.2}$
-![F star at low Galactic latitude ($b=14$)](../images/sed_3735840702450475008_t7137_g4.2_feh-1.0.png)
+![F star at low Galactic latitude ($b=14$)](../images/sed_2589622074314090496_t6907_g4.1_feh-0.8.png)
 
 (c) SEGUE: $4029\pm 22$, $4.25\pm 0.05$, PS1 + brutus: $4021^{+140}\_{-136}$, $4.7^{+0.1}\_{-0.1}$
 ![M star at high Galactic latitude ($b=57$)](../images/sed_2770975262219724800_t4029_g4.2_feh-1.6.png)
