@@ -279,14 +279,20 @@ The scatters are similar for various [Fe/H] ranges.
 
 
 
-### Sky distribution 
+### The number density of stars selected by different Fstar probability thresholds
+
+#### probfstar$>0.2$ 
+
+![The number density (probfstar>0.2)](../images/healpix_brutus_classifier_Pfstar0.2.png)
+
+#### probfstar$>0.5$
+
+![The number density (probfstar>0.5)](../images/healpix_brutus_classifier_Pfstar0.5.png)
+
+#### probfstar$>0.8$  
+![The number density (probfstar>0.8)](../images/healpix_brutus_classifier_Pfstar0.8.png)
 
 
-![Sky distribution of classified stars](../images/healpix_brutus_classifier.png)
-
-
-
-### Number density 
 
 ### Magnitude distribution 
 
