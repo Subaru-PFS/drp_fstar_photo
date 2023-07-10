@@ -5,8 +5,9 @@ The catalog of flux standard stars for PFS
 Versions
 --------------------------------------------------
 
-2.X: used in - Apr. 2023 comissionning runs 
-3.2: used in Jul. 2023 commissionong run 
+* 2.X: used in - Apr. 2023 comissionning runs 
+
+* 3.2: used in Jul. 2023 commissionong run 
 
 
 
