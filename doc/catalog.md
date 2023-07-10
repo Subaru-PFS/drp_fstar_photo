@@ -2,8 +2,11 @@ The catalog of flux standard stars for PFS
 ==================================================
 
 
+Versions
+--------------------------------------------------
 
-
+2.X: used in - Apr. 2023 comissionning runs 
+3.2: used in Jul. 2023 commissionong run 
 
 
 
@@ -38,7 +41,7 @@ to evaluate the throughput variation accros the PFS field-of-view.
 Photometric data
 --------------------------------------------------
 The selection of F-type stars are made by using PanSTARRS1 griz-band photometry (See the figure below for the transmission curves of broad-band filters used in PanSTARRS1 and Gaia). The y-band photometry is 
-shallower than others and thus will not be used. Those four bands cover a wavelength range from 400-900nm. An additional use of Gaia would not improve the parameter estimates significantly (to be tested by SEGUE).  
+shallower than others and thus will not be used. Those four bands cover the wavelength range of 400-900nm. An additional use of Gaia would not improve the parameter estimates significantly (to be tested by SEGUE).  
 
 
 
@@ -182,6 +185,7 @@ See [brutus Github website](https://github.com/joshspeagle/brutus) for more deta
      
 	In the following we assume observed stars are single and thus q=0.
   
+
  *    In each isochrone, stellar parameters (e.g., $T\_{eff}$, $\log g$, etc.) are given over a grid of 
       equivalent evolutionary points (EEPs). 
 
@@ -195,9 +199,23 @@ See [brutus Github website](https://github.com/joshspeagle/brutus) for more deta
 
 
 
-### Isochrone models and predictued spectral energy distribution
+### Stellar evolution models and predictued spectral energy distribution
 
-The left panels of the figure below show MIST issochrone models with [Fe/H]$=0.0$ (top) and 
+
+We make use the MIST stellar evolution model, which track the evolution of a particular 
+star over its lifetime. The model includes calculated stellar parameters, such as luminosity or 
+temperature, etc., at equivalent evolutionary points (EEP). Then, Brutus provides 
+a set of neural network models to calculate the spectral energy distribution 
+for a give set of predicted stellar parameters. The figure below 
+show examples of predicted PS1 color-magnitude diagrams for a given stellar initial mass and metallicity ([Fe/H]).
+
+
+![MIST EEP track](../images/EEP_MIST.png)
+
+
+
+To check how different stellar populations (e.g., stars born at the same time with the same initial composition) 
+are distributed in the PS1 color-magnitude diagrams, the left panels of the figure below show MIST isochrone models with [Fe/H]$=0.0$ (top) and 
 [Fe/H]$=-1.0$ (bottom) on $T\_{eff}$-$\log g$ diagrams. 
 Different colors of the lines represent the ages (1, 5, and 10 Gyrs) 
 of the isochrones. 
@@ -213,6 +231,9 @@ the metal-poor ([Fe/H]$=-1.0$) stars.
 
 
 ![MIST isochrone model](../images/brutus_mist_isochrones.png)
+
+
+### SEDs
 
 
 Gray lines in the figures below show the predicted SEDs of F-dwarf 
