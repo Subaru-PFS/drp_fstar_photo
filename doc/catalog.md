@@ -38,7 +38,7 @@ Flux standard stars for PFS
 The selection of flux standard stars is made to satisfy following requirements.
 
 * Stars should have photometric estimates of effective temperatures compatible with 
-F-type stars $ 6000\lt T_{eff} \lt 7500 $ K. F-type stars are 
+F-type stars ($6000\lt T \lt 7500$ K). F-type stars are 
 an ideal flux standard because the continuum level is 
 less affected by absorption lines than other spectral types. 
 * The stars should be brighter than $g\sim 20$ so that a sufficient signal-to-noise is reached within a single exposure (15 miniutes) 
@@ -149,7 +149,7 @@ OLD:
 
 NEW:
 
-``
+```
    count
 -----------
  137986281
@@ -171,13 +171,13 @@ Summary of the selection methods
 1. Logistic regression (Version 1.X, 2.X) 
 
 * Training sample: Stars with spectroscopic $T\_{eff}$ and $\log g$ estimates from SEGUE catalog. 
-  F-type stars are defined as stars that satisfy $6000 < T\_{eff} < 7800$ [K] and $3.5<\log g<5.5$. 
+  F-type stars are defined as stars that satisfy $6000 \lt T\_{eff} \lt 7800$ [K] and $3.5<\log g<5.5$. 
 * Input: $g$, $r$, $i$, $z$, extinction map
 * Output: Probability of being an F-type star 
 
 
 
-2. Stellar parameter estimates based on the [brutus](https://github.com/joshspeagle/brutus) code (Version 3.X)
+2. Stellar parameter estimates based on the [brutus](https://github.com/joshspeagle/brutus) code (Version 3.0 and later)
 
  
 * Input: $g$, $r$, $i$, $z$, parallax, stellar isochrone models
