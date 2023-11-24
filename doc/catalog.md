@@ -256,17 +256,17 @@ show examples of predicted PS1 color-magnitude diagrams for a given stellar init
 
 
 To check how different stellar populations (e.g., stars born at the same time with the same initial composition) 
-are distributed in the PS1 color-magnitude diagrams, the left panels of the figure below show MIST isochrone models with [Fe/H]$=0.0$ (top) and 
-[Fe/H]$=-1.0$ (bottom) on $T\_{eff}$-$\log g$ diagrams. 
+are distributed in the PS1 color-magnitude diagrams, the left panels of the figure below show MIST isochrone models with [Fe/H] $=0.0$ (top) and 
+[Fe/H] $=-1.0$ (bottom) on $T\_{eff}$-$\log g$ diagrams. 
 Different colors of the lines represent the ages (1, 5, and 10 Gyrs) 
 of the isochrones. 
 
 The right panels show predicted $g-i$ colors versus apparent $g$-band magnitudes 
-of the model with [Fe/H]$=0.0$ (top) and
+of the model with [Fe/H] $=0.0$ (top) and
 [Fe/H]$=-1.0$ (bottom). Different colors of the lines represent adopted heliocentric 
 distances (0.5, 1.0, and 10kpc). It can be seen that our selection of $g<20$ F-type 
 stars would contain main-sequence stars up to $\sim 10$ kpc. The F-stars are bluer for 
-the metal-poor ([Fe/H]$=-1.0$) stars. 
+the metal-poor ([Fe/H] $=-1.0$) stars. 
 
    
 
