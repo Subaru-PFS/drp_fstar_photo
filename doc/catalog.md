@@ -7,17 +7,16 @@ Versions
 
 * 2.0: used in - Jul. 2023 comissionning runs  
 
- - The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
- - The SDSS/SEGUE catalog is used to train the Logistic Regression model to identify likely F-type stars based on 
-   the extinction-corrected PS1 $g-r$ and $i-z$ colors.  
- - The trained model is then applied to calculate the probability of being an F-type star for each star in the crossmatched catalog.
+	* The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
+	* The SDSS/SEGUE catalog is used to train the Logistic Regression model to identify likely F-type stars based on the extinction-corrected PS1 $g-r$ and $i-z$ colors.  
+	* The trained model is then applied to calculate the probability of being an F-type star for each star in the crossmatched catalog.
 
 
 * 3.2: partly used in Jul. 2023 commissionong run (see below for details)
 
- - The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
- - The observed PS1 $griz$ fluxes are fitted by the SED models implemented in the brutus code.
- - The probability of being an F-type star is calculated from the posterior probability distrion of effective temperature for each star.
+	* The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
+	* The observed PS1 $griz$ fluxes are fitted by the SED models implemented in the brutus code.
+	* The probability of being an F-type star is calculated from the posterior probability distrion of effective temperature for each star.
 
 
 
@@ -29,7 +28,7 @@ for $\sim 10^8$ stars selected from a cross-matched catalog of PanSTARRS1 DR2 an
 
 
 The probability of being an F-type star is calculated primarily based on 
-PanSTARRS1 griz(y) photometry for stars down to $g~20$. 
+PanSTARRS1 $griz$($y$) photometry for stars down to $g\sim 20$. 
 
 
 
@@ -39,7 +38,7 @@ Flux standard stars for PFS
 The selection of flux standard stars is made to satisfy following requirements.
 
 * Stars should have photometric estimates of effective temperatures compatible with 
-F-type stars $ 6000<T_{eff}<7500 $ K. F-type stars are 
+F-type stars $ 6000\lt T_{eff} \lt 7500 $ K. F-type stars are 
 an ideal flux standard because the continuum level is 
 less affected by absorption lines than other spectral types. 
 * The stars should be brighter than $g\sim 20$ so that a sufficient signal-to-noise is reached within a single exposure (15 miniutes) 
@@ -55,9 +54,9 @@ to evaluate the throughput variation accros the PFS field-of-view.
 Photometric data
 --------------------------------------------------
 
-The selection of F-type stars are made by using PanSTARRS1 griz(y)-band photometry 
+The selection of F-type stars are made by using PanSTARRS1 $griz$($y$)-band photometry 
 (See the figure below for the transmission curves of broad-band filters 
-used in PanSTARRS1 and Gaia). The y-band photometry is 
+used in PanSTARRS1 and Gaia). The $y$-band photometry is 
 shallower than others and thus will not be used. Those four bands cover the wavelength range of 400-900nm. An additional use of Gaia would not improve the parameter estimates significantly (to be tested by SEGUE).  
 
 
@@ -84,7 +83,7 @@ select m.objID, objName, raMean as RAJ2000, decMean as DEJ2000, l, b, gMeanPSFMa
 ```
 
 
-Note that the median 50% completeness of PFS photometry are  g=23.2, r=23.2, i=23.1, z=22.3 and y=21.2 with significant variation accross the sky.
+Note that the median 50% completeness of PFS photometry are  $g=23.2$, $r=23.2$, $i=23.1$, $z=22.3$ and $y=21.2$ with significant variation accross the sky.
  See [PS1 website](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Photometric+Depth). 
 
 
@@ -123,10 +122,10 @@ Quality and color cuts
 
 In order to ensure the quality of the photometric data and remove obvious contaminants, we adopt the following cuts. 
 
-- $g>14$ to avoid saturated objects.
-- $g-i<0.5$ to remove objects that are unlikely to be the F-stars$^{1}$ 
+- $g\gt 14$ to avoid saturated objects.
+- $g-i\lt 0.5$ to remove objects that are unlikely to be the F-stars$^{1}$ 
 - Non-negative values of uncertainties in PS1 magnitudes.  
-- ${\rm ps\_{score}} > 0.8$ : To ensure an object is a point source according to the classification scheme of [Tachibana et al. 2018](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
+- ${\rm ps\_{score}} \gt 0.8$ : To ensure an object is a point source according to the classification scheme of [Tachibana et al. 2018](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
 - quality flag, object info flag
 
 
