@@ -28,21 +28,20 @@ for $\sim 10^8$ stars selected from a cross-matched catalog of PanSTARRS1 DR2 an
 
 
 The probability of being an F-type star is calculated primarily based on 
-PanSTARRS1 $griz$($y$) photometry for stars down to $g\sim 20$. 
+PanSTARRS1 $grizy$ photometry for stars down to $g\sim 20$. 
 
 
 
 
 Flux standard stars for PFS
 --------------------------------------------------
-The selection of flux standard stars is made to satisfy following requirements.
+The flux standard stars for PFS must meet the following requirements.
 
-* Stars should have photometric estimates of effective temperatures compatible with 
-F-type stars ($6000\lt T \lt 7500$ K). F-type stars are 
-an ideal flux standard because the continuum level is 
-less affected by absorption lines than other spectral types. 
-* The stars should be brighter than $g\sim 20$ so that a sufficient signal-to-noise is reached within a single exposure (15 miniutes) 
-taken with the low-resolution mode.  
+* The effective temperatures from photometry are compatible with an F-type star ($6000\lt T \lt 7500$ K). These stars 
+serve as ideal flux standards because their continuum level is 
+less affected by absorption lines compared to other spectral types. 
+* The magnitudes should be brighter than $g\sim 20$ so that a sufficient signal-to-noise is reached within a single exposure (15 miniutes) 
+under the low-resolution mode.  
 * The stars should be sufficiently numerous and homogeneously distributed on the sky 
 to evaluate the throughput variation accros the PFS field-of-view. 
 
@@ -54,10 +53,9 @@ to evaluate the throughput variation accros the PFS field-of-view.
 Photometric data
 --------------------------------------------------
 
-The selection of F-type stars are made by using PanSTARRS1 $griz$($y$)-band photometry 
+The selection of F-type stars are made by using PanSTARRS1 $grizy$-bands and Gaia $G$, $G_{BP}$, $G_{RP}$-band photometry
 (See the figure below for the transmission curves of broad-band filters 
-used in PanSTARRS1 and Gaia). The $y$-band photometry is 
-shallower than others and thus will not be used. Those four bands cover the wavelength range of 400-900nm. An additional use of Gaia would not improve the parameter estimates significantly (to be tested by SEGUE).  
+used in PanSTARRS1 and Gaia). Those five bands cover the wavelength range of 400-900nm. 
 
 
 
@@ -70,12 +68,13 @@ Base catalogs
 
 1. Gaia DR3
 
-The entire catalog has been downloaded from Gaia archive website and installed to a local database.
+The entire catalog has been downloaded from [Gaia archive website](http://cdn.gea.esac.esa.int/Gaia/) and installed to a local database.
 
 
 2. PanSTARRS1 DR2 
 
-Downloaded through MAST casjobs query for slices of one degree in right accention (ra = 359-360 in the following example). 
+A subset of the MeanObject catalog has been downloaded through the [MAST casjobs](https://mastweb.stsci.edu/mcasjobs/) query 
+for slices of one degree in right accention (ra = 359-360 in the following example). 
 
 
 ```
@@ -83,7 +82,7 @@ select m.objID, objName, raMean as RAJ2000, decMean as DEJ2000, l, b, gMeanPSFMa
 ```
 
 
-Note that the median 50% completeness of PFS photometry are  $g=23.2$, $r=23.2$, $i=23.1$, $z=22.3$ and $y=21.2$ with significant variation accross the sky.
+Note that the median 50% completeness of PFS photometry are  $g=23.2$, $r=23.2$, $i=23.1$, $z=22.3$ and $y=21.2$ with a significant variation accross the sky.
  See [PS1 website](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Photometric+Depth). 
 
 
@@ -99,20 +98,11 @@ The conversion of $E(B-V)$ to the extinction of each pass band is made based on 
 All Sky plot (TBD)
 
 
-4. Gaia x PanSTARRS1 cross match
+4. Gaia x PanSTARRS1 cross match (202080717 objects)
 
 Cross-matched table (list of Gaia ID and corresponding PanSTARRS1 ID) from Gaia archive
 
 All sky plot (TBD)
-
-```
-   count
------------
- 202080717
-(1 row)
-```
-
-
 
 
 
@@ -120,47 +110,26 @@ All sky plot (TBD)
 Quality and color cuts
 -------------------------------------
 
-In order to ensure the quality of the photometric data and remove obvious contaminants, we adopt the following cuts. 
+We adopt the following cuts to ensure the quality of the photometric data and remove obvious contaminants. 
+The numbers in perenthesis indicate the number of stars and its percentage after consecutively applying the cuts.
 
-- $g\gt 14$ to avoid saturated objects.
-- $g-i\lt 0.5$ to remove objects that are unlikely to be the F-stars$^{1}$ 
-- Non-negative values of uncertainties in PS1 magnitudes.  
-- ${\rm ps\_{score}} \gt 0.8$ : To ensure an object is a point source according to the classification scheme of [Tachibana et al. 2018](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9). 
-- quality flag, object info flag
+* Quality cuts
+	* $14 < g < 21$ to avoid saturated or faint objects (201055911, 99.5%).  
+	* Non-negative values of uncertainties in the PS1 magnitudes (198924399 98.4%).
+	* `ps_score>0.8`, to ensure an object is a point source according to the classification scheme of [Tachibana et al. 2018](https://iopscience.iop.org/article/10.1088/1538-3873/aae3d9) (183661819, 90.9%).
+	* `QF_OBJ_GOOD` flag value for the ObjectQualityFlags and `GOOD` flag value for the ObjectInfoFlags are both raised: [PS1 Object Flags](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Object+Flags) (183661819, 90.9%).
+	* `SECF_OBJ_EXT` flag values for all of the XFlags(X one of g, r, i, z, y) are NOT raised (171617590, 84.9%).
+	* `number_of_neighbours=1` and `number_of_mates=0` in the `panstarrs1_best_neighbour` catalog: [Gaia DR3 documentation](https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_cross-matches/ssec_dm_panstarrs1_best_neighbour.html) (171355175, 84.8%). 
 
+	 
 
-
- 
-$^{1}$ We take $g-i=0.7$ as the reddest possible color the F-stars can possess based on the following consideration.  
-
-
-OLD:
-
-```
-   count   
------------
- 185990390
-(1 row)
-
-```
-(92% of the original cross-matched catalog.)
-
-=> 
-
-NEW:
-
-```
-   count
------------
- 137986281
-(1 row)
-
-```
-(68% of the original cross-matched catalog.)
+* Color cut
+	* The extention corrected color $g-i\lt 1.0$ to remove objects that are unlikely to be an F-type star (59465080, 29.4%)
 
 
 
 
+![MIST EEP track](../images/)
 
 
 Summary of the selection methods
@@ -182,8 +151,6 @@ Summary of the selection methods
  
 * Input: $g$, $r$, $i$, $z$, parallax, stellar isochrone models
 * Output: Posterior probability distribution of Teff and logg 
-
-
 * The algorithm in brutus: 
   
   * Interporate a grid of bolometric correction for a given set of labels: 
@@ -192,15 +159,6 @@ Summary of the selection methods
      is therefore very fast 
 
  
-
-3. Stellar parameter estimates based on a full MCMC
-
-    Input: $g$, $r$, $i$, $z$, parallax, extinction map, stellar isochrone models
-    Output: Posterior probability distribution of $T\_{eff}$ and $\log g$.
-
-
-
-
 
 Stellar parameter estimates based on the brutus code
 --------------------------------------------------
