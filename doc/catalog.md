@@ -128,8 +128,9 @@ The numbers in perenthesis indicate the number of stars and its percentage after
 
 
 
+Signal-to-noise vs. i-band magnitude at different Galactic latitudes:
 
-![MIST EEP track](../images/)
+![SNvsMag](../images/PS1_mag_sn_iband.png)
 
 
 Summary of the selection methods
