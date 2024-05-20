@@ -7,7 +7,7 @@
 - For more details, please see the [documentation](doc/catalog.md).
                                                                                                     
 ## Sky coverage
-- $0<$RA$<360$, DEC$>-30$ and $|b|>10^{\deg}$ based on the PanStarrs1 DR2 catalog.
+- 0<RA<360 deg, DEC>-30 deg and |b|>10 deg based on the PanStarrs1 DR2 catalog.
 - Other fields are supplemented by stars from Gaia DR3, based on `teff_gspphot`.
  --------------------------------------
 
