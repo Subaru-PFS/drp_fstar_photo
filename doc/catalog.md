@@ -5,32 +5,23 @@ The catalog of flux standard stars for PFS
 Versions
 --------------------------------------------------
 
-* 2.0: used in - Jul. 2023 comissionning runs  
+* 2.0: used in - Jul. 2023 commissioning runs  
 
 	* The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
 	* The SDSS/SEGUE catalog is used to train the Logistic Regression model to identify likely F-type stars based on the extinction-corrected PS1 $g-r$ and $i-z$ colors.  
 	* The trained model is then applied to calculate the probability of being an F-type star for each star in the crossmatched catalog.
 
 
-* 3.2: partly used in Jul. 2023 commissionong run (see below for details)
+* 3.2: partly used in Jul. 2023 commissioning run 
 
 	* The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
 	* The observed PS1 $griz$ fluxes are fitted by the SED models implemented in the brutus code.
-	* The probability of being an F-type star is calculated from the posterior probability distrion of effective temperature for each star.
+	* The probability of being an F-type star is calculated from the posterior probability distribution of effective temperatures.
 
+* 3.3: used in March. 2024 commissioning run or later (see below for details)
 
-
-Catalog description
----------------------------------------------------
-
-The catalog of flux standard stars for PFS contains the estimates of effective temperature 
-for $\sim 10^8$ stars selected from a cross-matched catalog of PanSTARRS1 DR2 and Gaia DR3. 
-
-
-The probability of being an F-type star is calculated primarily based on 
-PanSTARRS1 $grizy$ photometry for stars down to $g\sim 20$. 
-
-
+    * Detailed quality cuts and color cuts have been applied.
+	
 
 
 Flux standard stars for PFS
@@ -50,13 +41,25 @@ to evaluate the throughput variation accros the PFS field-of-view.
 
 
 
+Catalog description
+---------------------------------------------------
+
+The catalog of flux standard stars for PFS contains the estimates of effective temperature
+for $\sim 10^8$ stars selected from a cross-matched catalog of PanSTARRS1 DR2 and Gaia DR3.
+
+
+The probability of being an F-type star is calculated primarily based on
+PanSTARRS1 $grizy$ photometry for stars down to $g\sim 20$.
+
+
+
+
 Photometric data
 --------------------------------------------------
 
 The selection of F-type stars are made by using PanSTARRS1 $grizy$-bands and Gaia $G$, $G_{BP}$, $G_{RP}$-band photometry
 (See the figure below for the transmission curves of broad-band filters 
-used in PanSTARRS1 and Gaia). Those five bands cover the wavelength range of 400-900nm. 
-
+used in PanSTARRS1 and Gaia). Those eight photometric bands cover the wavelength range of 400-900nm. 
 
 
 ![Transmission curves for the filters in Gaia and PanStarrs](../images/filters.png)
@@ -82,8 +85,7 @@ select m.objID, objName, raMean as RAJ2000, decMean as DEJ2000, l, b, gMeanPSFMa
 ```
 
 
-Note that the median 50% completeness of PFS photometry are  $g=23.2$, $r=23.2$, $i=23.1$, $z=22.3$ and $y=21.2$ with a significant variation accross the sky.
- See [PS1 website](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Photometric+Depth). 
+The median 50% completeness of PFS photometry are  $g=23.2$, $r=23.2$, $i=23.1$, $z=22.3$ and $y=21.2$ with a significant variation accross the sky. See [PS1 website](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Photometric+Depth). 
 
 
 3. Extinction correction
@@ -95,12 +97,10 @@ The conversion of $E(B-V)$ to the extinction of each pass band is made based on 
  [Schlafly & Finkbeiner 2011](https://ui.adsabs.harvard.edu/abs/2011ApJ...737..103S/abstract).
 
 
-All Sky plot (TBD)
-
 
 4. Gaia x PanSTARRS1 cross match (202080717 objects)
 
-Cross-matched table (list of Gaia ID and corresponding PanSTARRS1 ID) from Gaia archive
+The cross-matched table (list of Gaia ID and corresponding PanSTARRS1 ID) from Gaia archive is used.
 
 All sky plot (TBD)
 
@@ -120,7 +120,7 @@ The numbers in perenthesis indicate the number of stars and its percentage after
 	* `QF_OBJ_GOOD` flag value for the ObjectQualityFlags and `GOOD` flag value for the ObjectInfoFlags are both raised: [PS1 Object Flags](https://outerspace.stsci.edu/display/PANSTARRS/PS1+Object+Flags) (183661819, 90.9%).
 	* `SECF_OBJ_EXT` flag values for all of the XFlags(X one of g, r, i, z, y) are NOT raised (171617590, 84.9%).
 	* `number_of_neighbours=1` and `number_of_mates=0` in the `panstarrs1_best_neighbour` catalog: [Gaia DR3 documentation](https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_cross-matches/ssec_dm_panstarrs1_best_neighbour.html) (171355175, 84.8%). 
-
+	* Exclude bright objects (either $g\le 14$, $r\le 14$, $i\le 14$, $z\le 14$, or $y\le 14$). 
 	 
 
 * Color cut
@@ -133,7 +133,7 @@ Signal-to-noise vs. i-band magnitude at different Galactic latitudes:
 ![SNvsMag](../images/PS1_mag_sn_iband.png)
 
 
-Summary of the selection methods
+Selection methods
 -------------------------------------
 
 
@@ -170,9 +170,6 @@ Stellar parameter estimates based on the brutus code
 
 See [brutus Github website](https://github.com/joshspeagle/brutus) for more details.
 
-(See also StarHorse algorithm: arXiv:2111.01860v2)
-
-
 
  * For the models of stellar structure and evolution, we make use of [MIST stellar isochrone models](https://waps.cfa.harvard.edu/MIST/).
       The isochrones are prepared by varying the following parameters:
@@ -183,7 +180,7 @@ See [brutus Github website](https://github.com/joshspeagle/brutus) for more deta
    * secondary mass fraction (q)
    * distance (d [kpc]). 
      
-	In the following we assume observed stars are single and thus q=0.
+	In the following we assume observed stars are single and thus $q=0$.
   
 
  *    In each isochrone, stellar parameters (e.g., $T\_{eff}$, $\log g$, etc.) are given over a grid of 
@@ -296,9 +293,34 @@ The scatters are similar for various [Fe/H] ranges.
 
 
 
+### Comparison with the Gaia temperatures.
+
+ The figure below shows the comparison of effective temperatures 
+determined by brutus and those based on Gaia data. Stars with $G<17$ are 
+included in the plot. 
+
+![teff_brutus_Gaia](../images/teff_brutus_Gaia.png)
 
 
+### Gaia teff_gspphot
+For the region outside the PS1 footprints or at regions close to the Galactic plane 
+($|b|<10$), we adopt tempertures in the Gaia catalog estimated by Gaia BP/RP spectra. 
 
+
+#### Error floors 
+
+We added a noise floor to the flux errors from PS1 to take into account possible underestimates 
+of the photometric uncertainties in PS1. The flux error $\sigma$ for each band is then,
+ $\sigma = \sqrt{\sigma_{0}^2 + \sigma_{fl}^2}$, where $\sigma_{0}$ is the flux error from PS1 catalog and the $\sigma_{fl}=C \times Flux$ 
+is the noise floor.  
+The constant $C$ has been chosen to minimize the 
+difference between the photometric and the spectroscopic $T_{eff}$ estimates.
+
+
+![soften](../images/tdiff_soften.png)
+
+
+We chose $C=0.04$ as the parameter of the noise floor.  
 
 ### The number density of stars selected by different Fstar probability thresholds
 
