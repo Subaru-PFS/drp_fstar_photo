@@ -1,14 +1,14 @@
                                                                                                     
 # The catalog of flux calibration stars for PFS observations
-                                                                                                    
 - Virsion: 3.3
-                                                                                                    
-- Table created on 10/4/2024
-                                                                                                    
+- The version used in the latest engineering data release (May.2024 run): 3.3.
+- Table created on 20/5/2024
 - Authors: PFS obsproc team
-                                                                                                    
 - For more details, please see the [documentation](doc/catalog.md).
                                                                                                     
+## Sky coverage
+- $0<$RA$<360$, DEC$>-30$ and $|b|>10^{\deg}$ based on the PanStarrs1 DR2 catalog.
+- Other fields are supplemented by stars from Gaia DR3, based on `teff_gspphot`.
  --------------------------------------
 
 
@@ -16,7 +16,7 @@
 
 ## File description
                                                                                                     
-| name                  | unit      | description                                                            |
+| name					 | unit		 | description															  |
 |-----------------------|-----------|------------------------------------------------------------------------|
 | `obj_id`              |  -        | Gaia source ID                                                         |
 | `catalog`             |  -        | Catalog name                                                           |
@@ -71,8 +71,7 @@
 
 #### Notes
                                                                                                     
-  For ra, dec, epoch, parallax, pmra, pmdec, teff_gspphoto and their associated uncertainties.
-  See the Gaia archive website and the documentation.
+  For ra, dec, epoch, parallax, pmra, pmdec, teff_gspphoto and their associated uncertainties, see [Gaia archive website](https://gea.esac.esa.int/archive/) and the [Gaia DR3 documentation](https://gea.esac.esa.int/archive/documentation/GDR3/).
 
 
 
