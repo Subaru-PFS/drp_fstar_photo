@@ -1,8 +1,7 @@
                                                                                                     
 # The catalog of flux calibration stars for PFS observations
-- Virsion: 3.3
-- The version used in the latest engineering data release (May.2024 run): 3.3.
-- Table created on 20/5/2024
+- Virsion: 3.4
+- The version used in the latest run (September.2025 run): 3.4.
 - Authors: PFS obsproc team
 - For more details, please see the [documentation](doc/catalog.md).
                                                                                                     

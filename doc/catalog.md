@@ -18,10 +18,13 @@ Versions
 	* The observed PS1 $griz$ fluxes are fitted by the SED models implemented in the brutus code.
 	* The probability of being an F-type star is calculated from the posterior probability distribution of effective temperatures.
 
-* 3.3: used in March. 2024 commissioning run or later (see below for details)
+* 3.3: used in runs between Mar. 2024 - Jul. 2025  
 
     * Detailed quality cuts and color cuts have been applied.
 	
+* 3.4: used in Sep. 2025 run and later
+
+    * QSO candidates have been removed based on Gaia and PS1 photometry
 
 
 Flux standard stars for PFS
@@ -121,7 +124,8 @@ The numbers in perenthesis indicate the number of stars and its percentage after
 	* `SECF_OBJ_EXT` flag values for all of the XFlags(X one of g, r, i, z, y) are NOT raised (171617590, 84.9%).
 	* `number_of_neighbours=1` and `number_of_mates=0` in the `panstarrs1_best_neighbour` catalog: [Gaia DR3 documentation](https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_cross-matches/ssec_dm_panstarrs1_best_neighbour.html) (171355175, 84.8%). 
 	* Exclude bright objects (either $g\le 14$, $r\le 14$, $i\le 14$, $z\le 14$, or $y\le 14$). 
-	 
+	* (new from Ver. 3.4) objects with `HERN_QSO_P05` flag value for the objInfoFlag in PS1 removed.
+    * (new from Ver. 3.4) objects with `VARIABLE` flag value for the phot_variable_flag in Gaia DR3 removed. 
 
 * Color cut
 	* The extention corrected color $g-i\lt 1.0$ to remove objects that are unlikely to be an F-type star (59465080, 29.4%)
