@@ -326,25 +326,16 @@ difference between the photometric and the spectroscopic $T_{eff}$ estimates.
 
 We chose $C=0.04$ as the parameter of the noise floor.  
 
-### The number density of stars selected by different Fstar probability thresholds
+### The number density of candidate F-type stars (probfstar$>0.5$) 
 
-#### probfstar$>0.2$ 
-
-![The number density (probfstar>0.2)](../images/healpix_brutus_classifier_Pfstar0.2.png)
-
-#### probfstar$>0.5$
 
 ![The number density (probfstar>0.5)](../images/healpix_brutus_classifier_Pfstar0.5.png)
 
-#### probfstar$>0.8$  
-![The number density (probfstar>0.8)](../images/healpix_brutus_classifier_Pfstar0.8.png)
 
 
 
-### Magnitude distribution 
 
 
-## Preparation of specific run
 
 
 
