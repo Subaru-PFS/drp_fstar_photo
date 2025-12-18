@@ -65,7 +65,14 @@
 | `logg_brutus_low`     | dex       | 16% quantile of the logg posterior distribution                        |
 | `logg_brutus_high`    | dex       | 84% quantile of the logg posterior distribution                        |
 
+## Usage
 
+ Please select flux standards based on  the following criteria. Adgust the `prob_f_star` threshold to 
+achieve the desired distribution of flux standards within the target field.
+
+```sql
+(prob_f_star > 0.5) OR (fstar_gaia = True)
+```
 
 
 #### Notes
