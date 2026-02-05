@@ -1,43 +1,73 @@
 The catalog of flux standard stars for PFS
+(Prime Focus Spectrograph / Subaru Telescope)
 ==================================================
+
+This document outlines the selection criteria used to construct the catalog of 
+flux standard stars for PFS observations.
 
 
 Versions
 --------------------------------------------------
 
-* 2.0: used in - Jul. 2023 commissioning runs  
-
-	* The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
-	* The SDSS/SEGUE catalog is used to train the Logistic Regression model to identify likely F-type stars based on the extinction-corrected PS1 $g-r$ and $i-z$ colors.  
-	* The trained model is then applied to calculate the probability of being an F-type star for each star in the crossmatched catalog.
 
 
-* 3.2: partly used in Jul. 2023 commissioning run 
+* 3.5: used in Mar. 2026 run and later
 
-	* The F-star candidates are selected from a crossmatch of PanStarrs1(PS1) DR2 and Gaia DR3.
-	* The observed PS1 $griz$ fluxes are fitted by the SED models implemented in the brutus code.
-	* The probability of being an F-type star is calculated from the posterior probability distribution of effective temperatures.
+    * Stars close to known Galactic globular clusters have been removed 
+    * Stars in dense regions are flagged
 
-* 3.3: used in runs between Mar. 2024 - Jul. 2025  
 
-    * Detailed quality cuts and color cuts have been applied.
-	
-* 3.4: used in Sep. 2025 run and later
+* 3.4: used in runs between Sep. 2025 and Jan. 2026 
 
     * QSO candidates have been removed based on Gaia and PS1 photometry
 
 
-Flux standard stars for PFS
---------------------------------------------------
-The flux standard stars for PFS must meet the following requirements.
 
-* The effective temperatures from photometry are compatible with an F-type star ($6000\lt T \lt 7500$ K). These stars 
-serve as ideal flux standards because their continuum level is 
-less affected by absorption lines compared to other spectral types. 
-* The magnitudes should be brighter than $g\sim 20$ so that a sufficient signal-to-noise is reached within a single exposure (15 miniutes) 
-under the low-resolution mode.  
-* The stars should be sufficiently numerous and homogeneously distributed on the sky 
-to evaluate the throughput variation accros the PFS field-of-view. 
+* 3.3: used in runs between Mar. 2024 and Jul. 2025  
+
+    * Detailed quality cuts and color cuts have been applied.
+
+* 3.2: partly used in Jul. 2023 commissioning run 
+
+	* F-star candidates are selected from a crossmatch of PanStarrs1 (PS1) DR2 and Gaia DR3.
+	* Observed PS1 $griz$ fluxes are fitted by SED models implemented in the brutus code.
+	* The probability of being an F-type star is calculated from the posterior probability distribution of effective temperatures.
+
+
+* 2.0: used until Jul. 2023 commissioning runs  
+
+	* F-star candidates are selected from a crossmatch of PanStarrs1 (PS1) DR2 and Gaia DR3.
+	* The SDSS/SEGUE catalog is used to train a Logistic Regression model to identify likely F-type stars based on the extinction-corrected PS1 $g-r$ and $i-z$ colors.  
+	* The trained model is then applied to calculate the probability of being an F-type star for each star in the crossmatched catalog.
+
+
+
+Selection Criteria
+--------------------------------------------------
+
+To ensure accurate flux calibration with the Prime Focus Spectrograph, stars included in the flux standard 
+catalog must satisfy the following requirements: 
+
+1. Appropriate stellar type
+
+The effective temperatures from broadband photometry approximately fall within the 
+range $6000\lt T \lt 7500$ K, corresponding to F-type stars. F-type stars are 
+preferred because their spectral continua are relatively smooth and less affected by 
+strong absorption features compared with earlier or later-type stars, making them well suited as 
+flux calibration references. 
+
+2. Sufficient brightness
+
+The stars must be brighter than approximately $g\sim 20$. This brightness ensures that 
+a single 15-minutes exposure in the low-resolution mode yields an adequate signal-to-noise ratio for 
+reliable flux calibration. 
+
+3. Sky Coverage and spatial density
+
+Flux standards must be numerous and homogeneously distributed across the sky 
+so that throughput variations can be spatially characterized across the entire 
+PFS field of view. 
+
 
 
 ![Spectral energy distribution of F-type stars](../images/Fstarspec.png)
@@ -105,9 +135,6 @@ The conversion of $E(B-V)$ to the extinction of each pass band is made based on 
 
 The cross-matched table (list of Gaia ID and corresponding PanSTARRS1 ID) from Gaia archive is used.
 
-All sky plot (TBD)
-
-
 
 
 Quality and color cuts
@@ -124,8 +151,9 @@ The numbers in perenthesis indicate the number of stars and its percentage after
 	* `SECF_OBJ_EXT` flag values for all of the XFlags(X one of g, r, i, z, y) are NOT raised (171617590, 84.9%).
 	* `number_of_neighbours=1` and `number_of_mates=0` in the `panstarrs1_best_neighbour` catalog: [Gaia DR3 documentation](https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_cross-matches/ssec_dm_panstarrs1_best_neighbour.html) (171355175, 84.8%). 
 	* Exclude bright objects (either $g\le 14$, $r\le 14$, $i\le 14$, $z\le 14$, or $y\le 14$). 
-	* (new from Ver. 3.4) objects with `HERN_QSO_P05` flag value for the objInfoFlag in PS1 removed.
-    * (new from Ver. 3.4) objects with `VARIABLE` flag value for the phot_variable_flag in Gaia DR3 removed. 
+	* (from Ver. 3.4) objects with `HERN_QSO_P05` flag value for the objInfoFlag in PS1 removed.
+    * (from Ver. 3.4) objects with `VARIABLE` flag value for the phot_variable_flag in Gaia DR3 removed. 
+    * (new from Ver. 3.5) objects within 10 times the half-light radii of known Galactic globular clusters removed. 
 
 * Color cut
 	* The extention corrected color $g-i\lt 1.0$ to remove objects that are unlikely to be an F-type star (59465080, 29.4%)
@@ -339,10 +367,11 @@ We chose $C=0.04$ as the parameter of the noise floor.
 
 
 
+
 Appendix
 -----------------------------------
 
-# The use of Gaia photometry
+(TBC)
 
 
 
