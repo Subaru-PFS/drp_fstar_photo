@@ -1,5 +1,4 @@
 The catalog of flux standard stars for PFS
-
 ==================================================
 
 This document outlines the selection criteria used to construct the catalog of 
