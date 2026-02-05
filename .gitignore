@@ -2,3 +2,6 @@
 .vscode/
 .idea/
 .DS_Store
+notebook/
+__pycache__/
+*.pyc
