@@ -1,5 +1,5 @@
 The catalog of flux standard stars for PFS
-(Prime Focus Spectrograph / Subaru Telescope)
+
 ==================================================
 
 This document outlines the selection criteria used to construct the catalog of 
@@ -50,7 +50,7 @@ catalog must satisfy the following requirements:
 
 1. Appropriate stellar type
 
-The effective temperatures from broadband photometry approximately fall within the 
+&nbsp;&nbsp;&nbsp;&nbsp;The effective temperatures from broadband photometry approximately fall within the 
 range $6000\lt T \lt 7500$ K, corresponding to F-type stars. F-type stars are 
 preferred because their spectral continua are relatively smooth and less affected by 
 strong absorption features compared with earlier or later-type stars, making them well suited as 
