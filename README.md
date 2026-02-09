@@ -5,14 +5,13 @@
 **Previous Version (Jan 2025 run):** 3.4  
 **Authors:** PFS ObsProc Team
 
-For detailed methodology and selection criteria, see the [full documentation](doc/catalog.md).
+For detailed methodology and selection criteria, see the [documentation](doc/catalog.md).
                                                                                                     
 
 ## Sky Coverage
 
 - $0 < \mathrm{RA} < 360$ deg, $\mathrm{DEC} > -30$ deg, and $|b| > 10$ deg (from Pan-STARRS1 DR2)
 - Other regions are supplemented with stars from Gaia DR3, using `teff_gspphot`.
-
 
 
 
@@ -70,29 +69,23 @@ For detailed methodology and selection criteria, see the [full documentation](do
 | `logg_brutus_high`  | dex       | 84% quantile of $\log g$ posterior |
 | `is_gc_neighbor`    | -         | True if within 10× half-light radius of a globular cluster |
 | `is_dense_region`   | -         | True if in a crowded field |
-| `teff_brutus`         | K         | Effective temperature                                                  |
-| `teff_brutus_low`     | K         | 16% quantile of the teff posterior distribution                        |
-| `teff_brutus_high`    | K         | 84% quantile of the teff posterior distribution                        |
-| `logg_brutus`         | dex       | Surface gravity                                                        |
-| `logg_brutus_low`     | dex       | 16% quantile of the logg posterior distribution                        |
-| `logg_brutus_high`    | dex       | 84% quantile of the logg posterior distribution                        |
-| `is_gc_neighbor`     | dex       | within 10 times the half-light radius of known globular clusters                      |
-| `is_dense_region`     | dex       | stars in crowded fields                    |
+
 
 ## Usage
 
-To select flux standards, use the following criteria. Adjust the `prob_f_star` threshold as needed to achieve the desired spatial distribution in your target field.
+The catalogs are stored in a database located at a Subaru Telescope server. 
+To select flux standards from the database, use the following criteria. Adjust the `prob_f_star` threshold as needed to achieve the desired spatial distribution in your target field.
 
 **Basic selection:**
 
 ```sql
-(prob_f_star > 0.5) OR (fstar_gaia = True)
+(prob_f_star > 0.5) OR (is_fstar_gaia = True)
 ```
 
 **Exclude crowded regions and globular cluster neighbors:**
 
 ```sql
-((prob_f_star > 0.5) OR (fstar_gaia = True)) AND (is_gc_neighbor = False) AND (is_dense_region = False)
+((prob_f_star > 0.5) OR (is_fstar_gaia = True)) AND (is_gc_neighbor = False) AND (is_dense_region = False)
 ```
 
 ---
@@ -100,6 +93,7 @@ To select flux standards, use the following criteria. Adjust the `prob_f_star` t
 ### Notes
 
 - For details on astrometric and photometric parameters (e.g., `ra`, `dec`, `epoch`, `parallax`, `pmra`, `pmdec`, `teff_gspphot`), see the [Gaia archive](https://gea.esac.esa.int/archive/) and [Gaia DR3 documentation](https://gea.esac.esa.int/archive/documentation/GDR3/).
+- The catalog of Galactic globular clusters are taken from [Globular cluster database](https://people.smp.uq.edu.au/HolgerBaumgardt/globular/). See [Baumgardt & Vasiliev (2021)](https://ui.adsabs.harvard.edu/abs/2021MNRAS.505.5957B/abstract) for details.
 
 ---
 

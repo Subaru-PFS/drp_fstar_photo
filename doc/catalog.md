@@ -12,11 +12,11 @@ Versions
 
 * 3.5: used in Mar. 2026 run and later
 
-    * Stars close to known Galactic globular clusters have been removed 
+    * Stars close to [known Galactic globular clusters](https://people.smp.uq.edu.au/HolgerBaumgardt/globular/) have been removed 
     * Stars in dense regions are flagged
 
 
-* 3.4: used in runs between Sep. 2025 and Jan. 2026 
+* 3.4: used in runs between Sep. 2025 and Mar. 2026 
 
     * QSO candidates have been removed based on Gaia and PS1 photometry
 
